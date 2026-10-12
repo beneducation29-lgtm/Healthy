@@ -297,7 +297,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
     let csv = '\uFEFF'; // UTF-8 BOM
     csv += `BÁO CÁO SỨC KHỎE VÀ ĐƯỜNG HUYẾT - SỐNG KHỎE 360\n`;
     csv += `Họ và tên,${profile.fullName},Năm sinh,${profile.birthYear || 'Chưa ghi'},Bác sĩ điều trị,${profile.doctorName || 'Chưa ghi'}\n`;
-    csv += `Khoảng thời gian,Từ ${formatDateVi(currentStart.toISOString())} Đến ${formatDateVi(currentEnd.toISOString())},Tổng số ngày,${periodDays}\n\n`;
+    csv += `Khoảng thời gian,Từ ${formatDateVi(`${toLocalDateInput(currentStart)}T12:00:00`)} Đến ${formatDateVi(`${toLocalDateInput(currentEnd)}T12:00:00`)},Tổng số ngày,${periodDays}\n\n`;
 
     // 1. Glucose Section
     csv += `--- 1. NHẬT KÝ ĐO ĐƯỜNG HUYẾT ---\n`;
