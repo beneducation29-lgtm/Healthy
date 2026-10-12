@@ -280,11 +280,11 @@ export default function App() {
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     
-    let targetMedId: string | undefined;
+    // Resolve the medication before scheduling state updates; React may defer updater callbacks.
+    const targetMedId = todayDoses.find((dose) => dose.id === doseId)?.medicationId;
     setTodayDoses((prev) =>
       prev.map((d) => {
         if (d.id === doseId) {
-          targetMedId = d.medicationId;
           return {
             ...d,
             taken: true,
@@ -372,7 +372,8 @@ export default function App() {
     setMedications((prev) => [...prev, fullMed]);
 
     // Also auto-generate today doses for the times of day if needed
-    const todayStr = new Date().toISOString().split('T')[0];
+    const localNow = new Date();
+    const todayStr = `${localNow.getFullYear()}-${String(localNow.getMonth() + 1).padStart(2, '0')}-${String(localNow.getDate()).padStart(2, '0')}`;
     if (fullMed.timesOfDay && fullMed.timesOfDay.length > 0) {
       const newDoses: MedicationDoseLog[] = fullMed.timesOfDay.map((t, idx) => ({
         id: `dose-${Date.now()}-${idx}`,
