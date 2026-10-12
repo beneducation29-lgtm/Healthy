@@ -56,33 +56,31 @@ export const GlucoseTab: React.FC<GlucoseTabProps> = ({
   const targetFastingMax = profile.targetFastingMax || 130;
   const targetPostMealMax = profile.targetPostMealMax || 180;
 
-  // Filter records based on time range and meal context
+  // Use calendar-day boundaries so "today", "7 days", and "30 days" are predictable.
   const filteredRecords = useMemo(() => {
     const now = new Date();
-    
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const rangeStart = new Date(todayStart);
+
+    if (timeRange === 'week') {
+      rangeStart.setDate(rangeStart.getDate() - 6);
+    } else if (timeRange === 'month') {
+      rangeStart.setDate(rangeStart.getDate() - 29);
+    }
+
     return records.filter((r) => {
-      // 1. Context filter
-      if (filterContext !== 'all' && r.mealContext !== filterContext) {
-        return false;
-      }
+      if (filterContext !== 'all' && r.mealContext !== filterContext) return false;
 
-      // 2. Time range filter
       const recordDate = new Date(r.timestamp);
-      if (isNaN(recordDate.getTime())) return false;
+      if (Number.isNaN(recordDate.getTime())) return false;
 
-      const diffTime = now.getTime() - recordDate.getTime();
-      const diffDays = diffTime / (1000 * 3600 * 24);
+      // Ignore future-dated entries in historical statistics.
+      if (recordDate > now) return false;
 
       if (timeRange === 'day') {
-        // Today or within last 24 hours
-        return diffDays <= 1.5;
-      } else if (timeRange === 'week') {
-        // Last 7 days
-        return diffDays <= 7.5;
-      } else {
-        // Last 30 days
-        return diffDays <= 30.5;
+        return recordDate >= todayStart;
       }
+      return recordDate >= rangeStart;
     });
   }, [records, filterContext, timeRange]);
 
@@ -99,7 +97,7 @@ export const GlucoseTab: React.FC<GlucoseTabProps> = ({
     : 0;
   const formattedAvg = formatGlucose(avgMgDl, unit);
 
-  const inTargetCount = filteredRecords.filter((r) => r.status === 'target').length;
+  const inTargetCount = filteredRecords.filter((r) => typeof r.valueMgDl === 'number' && Number.isFinite(r.valueMgDl) && r.valueMgDl >= 20 && r.valueMgDl <= 600 && r.status === 'target').length;
   const targetPercent = totalCount > 0 ? Math.round((inTargetCount / totalCount) * 100) : 0;
 
   const minVal = totalCount > 0 ? Math.min(...validValues) : 0;
