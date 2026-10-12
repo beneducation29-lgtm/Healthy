@@ -131,14 +131,26 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
     ? Math.round((inRange7DaysCount / last7DaysRecords.length) * 100)
     : 100;
 
+  // Daily metrics must only include records from the user's current local calendar day.
+  const now = new Date();
+  const isToday = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return !Number.isNaN(date.getTime()) &&
+      date.getFullYear() === now.getFullYear() &&
+      date.getMonth() === now.getMonth() &&
+      date.getDate() === now.getDate();
+  };
+  const todayActivities = activities.filter((activity) => isToday(activity.timestamp));
+  const todayMeals = meals.filter((meal) => isToday(meal.timestamp));
+
   // Steps & Activity metrics
-  const totalSteps = activities.reduce((acc, curr) => acc + (curr.steps || 0), 0);
+  const totalSteps = todayActivities.reduce((acc, curr) => acc + (curr.steps || 0), 0);
   const stepPercentage = Math.min(100, Math.round((totalSteps / profile.dailyStepGoal) * 100));
-  const totalCalories = activities.reduce((acc, curr) => acc + (curr.caloriesBurned || 0), 0);
-  const totalDurationMinutes = activities.reduce((acc, curr) => acc + curr.durationMinutes, 0);
+  const totalCalories = todayActivities.reduce((acc, curr) => acc + (curr.caloriesBurned || 0), 0);
+  const totalDurationMinutes = todayActivities.reduce((acc, curr) => acc + curr.durationMinutes, 0);
 
   // Nutrition metrics
-  const totalCarbsToday = meals.reduce((acc, curr) => acc + (curr.carbsGrams || 0), 0);
+  const totalCarbsToday = todayMeals.reduce((acc, curr) => acc + (curr.carbsGrams || 0), 0);
   const recommendedCarbsMax = 150;
   const waterPercentage = Math.min(100, Math.round((waterDrankMl / profile.dailyWaterGoalMl) * 100));
 
@@ -162,7 +174,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-emerald-200 text-xs sm:text-sm font-semibold">
               <Calendar className="w-4 h-4" />
-              <span>Chủ Nhật, ngày 11 tháng 10 năm 2026</span>
+              <span className="capitalize">{now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
               <span className="opacity-60">·</span>
               <span className="bg-white/15 px-2.5 py-0.5 rounded-full text-xs font-medium">Hôm nay</span>
             </div>
