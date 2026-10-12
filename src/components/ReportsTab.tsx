@@ -69,14 +69,20 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
   const [activeChart, setActiveChart] = useState<ActiveChartTab>('glucose');
   const [showDoctorPreview, setShowDoctorPreview] = useState(false);
 
-  // Custom date range state (defaults to past 14 days)
-  const today = useMemo(() => new Date(), []);
+  // Build date-input values in local time; toISOString() would shift the day in some time zones.
+  const toLocalDateInput = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const defaultStartDate = useMemo(() => {
     const d = new Date();
-    d.setDate(d.getDate() - 14);
-    return d.toISOString().split('T')[0];
+    d.setDate(d.getDate() - 13);
+    return toLocalDateInput(d);
   }, []);
-  const defaultEndDate = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const defaultEndDate = useMemo(() => toLocalDateInput(new Date()), []);
 
   const [customStart, setCustomStart] = useState(defaultStartDate);
   const [customEnd, setCustomEnd] = useState(defaultEndDate);
@@ -97,15 +103,18 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
       start.setDate(end.getDate() - 29);
     } else {
       // Custom
-      const s = new Date(customStart);
-      s.setHours(0, 0, 0, 0);
-      const e = new Date(customEnd);
-      e.setHours(23, 59, 59, 999);
-      if (s <= e) {
-        start = s;
-        end.setTime(e.getTime());
-      }
-      days = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+      const parseLocalDate = (value: string, endOfDay = false) => {
+        const [year, month, day] = value.split('-').map(Number);
+        const parsed = new Date(year, month - 1, day);
+        parsed.setHours(endOfDay ? 23 : 0, endOfDay ? 59 : 0, endOfDay ? 59 : 0, endOfDay ? 999 : 0);
+        return parsed;
+      };
+      const first = parseLocalDate(customStart);
+      const last = parseLocalDate(customEnd, true);
+      // If dates are entered in reverse order, normalize the range instead of silently using defaults.
+      start = first <= last ? first : parseLocalDate(customEnd);
+      end.setTime(first <= last ? last.getTime() : parseLocalDate(customStart, true).getTime());
+      days = Math.max(1, Math.round((new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime() - new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime()) / (1000 * 60 * 60 * 24)) + 1);
     }
 
     // Previous period with equal length for comparison
