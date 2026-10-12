@@ -556,7 +556,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
             <div>
               <span className="text-[11px] text-slate-500 font-bold uppercase">Tuân thủ thuốc:</span>
               <div className="text-2xl font-black font-mono text-blue-700 mt-0.5">
-                {adherencePercent !== null ? `${adherencePercent}%` : '—'}%
+                {adherencePercent !== null ? `${adherencePercent}%` : '—'}
               </div>
               <span className="text-[10px] text-slate-500">{takenDosesCount}/{totalDosesScheduled} liều đã uống</span>
             </div>
