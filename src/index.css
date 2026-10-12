@@ -5,6 +5,31 @@
     font-family: 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  button, input, select, textarea {
+    font: inherit;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid #059669;
+    outline-offset: 2px;
   }
 }
 
@@ -21,9 +46,18 @@ body.font-size-xlarge {
   font-size: 20px;
 }
 
-/* Ensure smooth touch targets */
-button, a, input, select, textarea {
-  touch-action: manipulation;
+/* Keep wide tables usable on small screens without forcing the whole page wider. */
+.table-scroll,
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Respect device safe areas, especially on iPhones. */
+@supports (padding: max(0px)) {
+  #root {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 /* Custom scrollbar for data tables and logs */
