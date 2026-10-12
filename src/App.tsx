@@ -280,8 +280,12 @@ export default function App() {
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     
-    // Resolve the medication before scheduling state updates; React may defer updater callbacks.
-    const targetMedId = todayDoses.find((dose) => dose.id === doseId)?.medicationId;
+    // Only decrement inventory on the transition from not-taken to taken.
+    // Repeated clicks on an already completed dose must not consume extra pills.
+    const targetDose = todayDoses.find((dose) => dose.id === doseId);
+    if (!targetDose || targetDose.taken || targetDose.status === 'taken') return;
+
+    const targetMedId = targetDose.medicationId;
     setTodayDoses((prev) =>
       prev.map((d) => {
         if (d.id === doseId) {
@@ -297,7 +301,6 @@ export default function App() {
       })
     );
 
-    // Decrease pills remaining if tracked
     if (targetMedId) {
       setMedications((prev) =>
         prev.map((m) =>
