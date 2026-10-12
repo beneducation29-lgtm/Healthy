@@ -128,7 +128,13 @@ export const MedicationTab: React.FC<MedicationTabProps> = ({
   const [formError, setFormError] = useState<string | null>(null);
 
   // Today Doses filtering
-  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const todayStr = useMemo(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }, []);
   
   const currentDayDoses = useMemo(() => {
     return todayDoses.filter((d) => d.date === todayStr);
@@ -192,8 +198,8 @@ export const MedicationTab: React.FC<MedicationTabProps> = ({
     setMedTiming(med.timing);
     setMedTimingLabel(med.timingLabel);
     setMedTimes(med.timesOfDay.length > 0 ? med.timesOfDay : ['08:00']);
-    setMedPillsTotal(med.pillsTotal || 30);
-    setMedPillsRemaining(med.pillsRemaining || 30);
+    setMedPillsTotal(med.pillsTotal ?? 30);
+    setMedPillsRemaining(med.pillsRemaining ?? 30);
     setMedNotes(med.notes || '');
     setMedDoctor(med.doctorPrescribed || 'Theo chỉ định bác sĩ điều trị');
     setMedFormType(med.formType || 'tablet');
