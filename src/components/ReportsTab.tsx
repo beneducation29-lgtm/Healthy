@@ -284,12 +284,13 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
   const totalDosesScheduled = currentDoses.length;
   const takenDosesCount = currentDoses.filter((d) => d.taken || d.status === 'taken').length;
   const missedDosesCount = currentDoses.filter((d) => d.status === 'missed').length;
-  const adherencePercent = totalDosesScheduled > 0 ? Math.round((takenDosesCount / totalDosesScheduled) * 100) : 100;
+  // No scheduled dose records means adherence is unknown, not 100%.
+  const adherencePercent = totalDosesScheduled > 0 ? Math.round((takenDosesCount / totalDosesScheduled) * 100) : null;
 
   const prevTotalDoses = prevDoses.length;
   const prevTakenDoses = prevDoses.filter((d) => d.taken || d.status === 'taken').length;
   const prevAdherence = prevTotalDoses > 0 ? Math.round((prevTakenDoses / prevTotalDoses) * 100) : null;
-  const adherenceDiff = prevAdherence !== null ? adherencePercent - prevAdherence : null;
+  const adherenceDiff = prevAdherence !== null && adherencePercent !== null ? adherencePercent - prevAdherence : null;
 
   // Export to CSV with UTF-8 BOM for flawless Excel Vietnamese rendering
   const handleExportCSV = () => {
@@ -555,7 +556,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
             <div>
               <span className="text-[11px] text-slate-500 font-bold uppercase">Tuân thủ thuốc:</span>
               <div className="text-2xl font-black font-mono text-blue-700 mt-0.5">
-                {adherencePercent}%
+                {adherencePercent !== null ? `${adherencePercent}%` : '—'}%
               </div>
               <span className="text-[10px] text-slate-500">{takenDosesCount}/{totalDosesScheduled} liều đã uống</span>
             </div>
@@ -1195,7 +1196,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
                     <h3 className="font-bold text-slate-900 text-base">Tuân Thủ Uống Thuốc</h3>
                   </div>
                   <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-blue-100 text-blue-800">
-                    {adherencePercent}% tuân thủ
+                    {adherencePercent !== null ? `${adherencePercent}% tuân thủ` : 'Chưa có dữ liệu'}
                   </span>
                 </div>
 
