@@ -93,7 +93,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   });
 
   // 7-day readings for SVG chart (chronological: oldest to newest)
-  const last7DaysRecords = [...glucoseRecords].reverse().slice(-8);
+  const last7DaysRecords = [...glucoseRecords].reverse().slice(-7);
 
   // SVG Chart Dimensions
   const chartWidth = 680;
@@ -125,11 +125,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   // 7-day metrics
   const avg7DayMgDl = last7DaysRecords.length > 0
     ? Math.round(last7DaysRecords.reduce((acc, r) => acc + r.valueMgDl, 0) / last7DaysRecords.length)
-    : 110;
+    : null;
   const inRange7DaysCount = last7DaysRecords.filter((r) => r.status === 'target').length;
   const percent7DaysInRange = last7DaysRecords.length > 0
     ? Math.round((inRange7DaysCount / last7DaysRecords.length) * 100)
-    : 100;
+    : null;
 
   // Daily metrics must only include records from the user's current local calendar day.
   const now = new Date();
@@ -500,10 +500,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <div className="flex items-center gap-2 text-xs font-semibold">
             <div className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl">
               <span className="text-slate-500">Trung bình 7 ngày:</span>{' '}
-              <span className="font-mono text-slate-900 font-bold">{formatGlucose(avg7DayMgDl, unit).value} {unit}</span>
+              <span className="font-mono text-slate-900 font-bold">{avg7DayMgDl === null ? '—' : `${formatGlucose(avg7DayMgDl, unit).value} ${unit}`}</span>
             </div>
             <div className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl">
-              <span>Đạt mục tiêu: <strong>{percent7DaysInRange}%</strong></span>
+              <span>{percent7DaysInRange === null ? 'Chưa có dữ liệu' : <>Đạt mục tiêu: <strong>{percent7DaysInRange}%</strong></>}</span>
             </div>
           </div>
         </div>
