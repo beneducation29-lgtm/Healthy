@@ -21,6 +21,13 @@ import { FoodItem, MealRecord } from '../types';
 import { vietnameseFoodDatabase } from '../data/mockData';
 import { formatDateVi, formatTimeVi } from '../utils/glucoseUtils';
 
+const getLocalDateInput = (date = new Date()): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 interface NutritionTabProps {
   meals: MealRecord[];
   onAddMeal: (meal: Omit<MealRecord, 'id'>) => void;
@@ -42,7 +49,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
 }) => {
   // Date selector state for viewing history by date
   const [selectedDate, setSelectedDate] = useState<string>(() => {
-    return new Date().toISOString().split('T')[0];
+    return getLocalDateInput();
   });
 
   // Modal state
@@ -56,7 +63,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   const [portionSize, setPortionSize] = useState('1 phần vừa');
   const [mealItems, setMealItems] = useState('');
   const [carbsGrams, setCarbsGrams] = useState<string>('45');
-  const [mealDate, setMealDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
+  const [mealDate, setMealDate] = useState<string>(() => getLocalDateInput());
   const [mealTime, setMealTime] = useState<string>(() => {
     const now = new Date();
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -176,10 +183,10 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   const handleDateShift = (days: number) => {
     const current = new Date(selectedDate);
     current.setDate(current.getDate() + days);
-    setSelectedDate(current.toISOString().split('T')[0]);
+    setSelectedDate(getLocalDateInput(current));
   };
 
-  const isToday = selectedDate === new Date().toISOString().split('T')[0];
+  const isToday = selectedDate === getLocalDateInput();
 
   // Filter foods in database
   const filteredFoods = vietnameseFoodDatabase.filter((f) => {
@@ -257,7 +264,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
 
             {!isToday && (
               <button
-                onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                onClick={() => setSelectedDate(getLocalDateInput())}
                 className="px-3 py-2 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-colors"
               >
                 Về hôm nay
