@@ -24,6 +24,7 @@ import {
 } from './data/mockData';
 import { Header } from './components/Header';
 import { BmiHealthPanel } from './components/BmiHealthPanel';
+import { HealthCategoryGrid } from './components/HealthCategoryGrid';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { OverviewTab } from './components/OverviewTab';
 import { GlucoseTab } from './components/GlucoseTab';
@@ -596,6 +597,7 @@ export default function App() {
       <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-7xl w-full mx-auto pb-24 md:pb-12">
         {currentTab === 'overview' && (
           <>
+          <HealthCategoryGrid onTabChange={setCurrentTab} />
           <BmiHealthPanel />
           <OverviewTab
             profile={profile}
