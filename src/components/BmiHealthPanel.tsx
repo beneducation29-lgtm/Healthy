@@ -122,7 +122,7 @@ export const BmiHealthPanel: React.FC = () => {
           <div className="mt-6 grid grid-cols-2 gap-3">
             <div className="rounded-xl border border-slate-200 bg-white p-3">
               <p className="text-xs text-slate-500">Khoảng cân nặng BMI tham khảo</p>
-              <p className="mt-1 text-base font-extrabold text-emerald-700">{heightCm > 0 ? `${healthyMin.toFixed(1)}–${healthyMax.toFixed(1)} kg` : '—'}</p>
+              <p className="mt-1 text-base font-extrabold text-emerald-700">{heightCm > 0 ? (unit === 'metric' ? `${healthyMin.toFixed(1)}–${healthyMax.toFixed(1)} kg` : `${(healthyMin / 0.45359237).toFixed(1)}–${(healthyMax / 0.45359237).toFixed(1)} lb`) : '—'}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-3">
               <p className="text-xs text-slate-500">Thông tin hồ sơ</p>
