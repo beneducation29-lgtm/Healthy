@@ -1,12 +1,12 @@
 import React from 'react';
-import { 
-  Home, 
-  Activity, 
-  Utensils, 
-  Pill, 
+import {
+  Home,
+  Activity,
+  Utensils,
+  Pill,
   Footprints,
-  FileBarChart2, 
-  User 
+  FileBarChart2,
+  User
 } from 'lucide-react';
 import { NavigationTab } from '../types';
 
@@ -30,28 +30,24 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   ];
 
   return (
-    <nav 
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg px-2 pb-safe"
+    <nav
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-1 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur-md md:hidden"
       aria-label="Thanh điều hướng dưới đáy màn hình"
     >
-      <div className="flex items-center justify-between py-1.5 overflow-x-auto scrollbar-none">
+      <div className="mx-auto flex max-w-xl items-stretch gap-0.5 overflow-x-auto py-1.5">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;
           return (
             <button
               key={tab.id}
+              type="button"
               onClick={() => onTabChange(tab.id)}
-              className={`min-h-[48px] min-w-[50px] flex-1 flex flex-col items-center justify-center rounded-xl px-1 py-1 transition-colors ${
-                isActive
-                  ? 'text-emerald-700 bg-emerald-50/80 font-bold'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
+              aria-current={isActive ? 'page' : undefined}
+              className={`flex min-h-12 min-w-[48px] flex-1 flex-col items-center justify-center rounded-xl px-1 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-1 ${isActive ? 'bg-emerald-50 text-emerald-800' : 'text-slate-500 hover:text-slate-800'}`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'text-emerald-600 stroke-[2.5]' : 'stroke-[1.8]'}`} />
-              <span className="text-[10px] tracking-tight leading-tight mt-0.5 whitespace-nowrap">
-                {tab.label}
-              </span>
+              <Icon className={`h-5 w-5 ${isActive ? 'text-emerald-600 stroke-[2.5]' : 'stroke-[1.8]'}`} />
+              <span className="mt-0.5 whitespace-nowrap text-[10px] leading-tight tracking-tight">{tab.label}</span>
             </button>
           );
         })}
