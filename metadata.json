@@ -1,0 +1,6 @@
+{
+  "name": "Sống Khỏe - Theo Dõi Tiểu Đường Type 2",
+  "description": "Ứng dụng theo dõi sức khỏe, đường huyết, dinh dưỡng, vận động và lịch dùng thuốc thân thiện cho người lớn tuổi mắc đái tháo đường type 2.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
