@@ -169,7 +169,8 @@ export const MedicationTab: React.FC<MedicationTabProps> = ({
   // Adherence calculation
   const totalLogs = todayDoses.length;
   const takenLogs = todayDoses.filter((d) => d.taken || d.status === 'taken').length;
-  const adherenceRate = totalLogs > 0 ? Math.round((takenLogs / totalLogs) * 100) : 100;
+  // An empty log is missing data, not evidence of perfect adherence.
+  const adherenceRate = totalLogs > 0 ? Math.round((takenLogs / totalLogs) * 100) : null;
 
   // Open Add Modal
   const handleOpenAddModal = () => {
@@ -627,12 +628,12 @@ export const MedicationTab: React.FC<MedicationTabProps> = ({
               <span className="text-xs font-bold text-slate-500 uppercase">Tỷ Lệ Tuân Thủ Điều Trị</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold font-mono text-emerald-700 tabular-nums">
-                  {adherenceRate}%
+                  {adherenceRate === null ? 'Chưa có dữ liệu' : `${adherenceRate}%`}
                 </span>
                 <span className="text-xs text-slate-500 font-semibold">({takenLogs}/{totalLogs} liều)</span>
               </div>
               <p className="text-[11px] text-slate-500">
-                Mức tuân thủ trên 85% giúp đường huyết ổn định và giảm thiểu biến chứng mạch máu.
+                Tỷ lệ được tính từ các liều đã ghi nhận trong lịch sử. Hãy dùng thuốc theo đúng chỉ định của bác sĩ.
               </p>
             </div>
 
