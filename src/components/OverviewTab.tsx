@@ -145,14 +145,19 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
   // Steps & Activity metrics
   const totalSteps = todayActivities.reduce((acc, curr) => acc + (curr.steps || 0), 0);
-  const stepPercentage = Math.min(100, Math.round((totalSteps / profile.dailyStepGoal) * 100));
+  const hasStepGoal = Number.isFinite(profile.dailyStepGoal) && profile.dailyStepGoal > 0;
+  const stepPercentage = hasStepGoal
+    ? Math.min(100, Math.round((totalSteps / profile.dailyStepGoal) * 100))
+    : null;
   const totalCalories = todayActivities.reduce((acc, curr) => acc + (curr.caloriesBurned || 0), 0);
   const totalDurationMinutes = todayActivities.reduce((acc, curr) => acc + curr.durationMinutes, 0);
 
   // Nutrition metrics
   const totalCarbsToday = todayMeals.reduce((acc, curr) => acc + (curr.carbsGrams || 0), 0);
-  const recommendedCarbsMax = 150;
-  const waterPercentage = Math.min(100, Math.round((waterDrankMl / profile.dailyWaterGoalMl) * 100));
+  const hasWaterGoal = Number.isFinite(profile.dailyWaterGoalMl) && profile.dailyWaterGoalMl > 0;
+  const waterPercentage = hasWaterGoal
+    ? Math.min(100, Math.round((waterDrankMl / profile.dailyWaterGoalMl) * 100))
+    : null;
 
   // Reminders summary
   const completedReminders = reminders.filter((r) => r.completed).length;
@@ -458,25 +463,25 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <span className="text-3xl sm:text-4xl font-extrabold font-mono text-slate-900 tabular-nums">
               {totalSteps.toLocaleString()}
             </span>
-            <span className="text-xs text-slate-500 font-semibold">/ {profile.dailyStepGoal.toLocaleString()} bước</span>
+            <span className="text-xs text-slate-500 font-semibold">/ {hasStepGoal ? `${profile.dailyStepGoal.toLocaleString()} bước` : 'Chưa thiết lập mục tiêu'}</span>
           </div>
 
           <div className="space-y-1.5 pt-1">
             <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
               <div 
                 className="bg-teal-600 h-full rounded-full transition-all"
-                style={{ width: `${stepPercentage}%` }}
+                style={{ width: `${stepPercentage ?? 0}%` }}
               />
             </div>
             <div className="flex justify-between text-xs text-slate-500 font-medium">
-              <span>Đạt {stepPercentage}% mục tiêu</span>
+              <span>{stepPercentage !== null ? `Đạt ${stepPercentage}% mục tiêu` : 'Chưa thiết lập mục tiêu bước chân'}</span>
               <span className="font-mono text-teal-800 font-semibold">~{totalCalories} kcal</span>
             </div>
           </div>
 
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
             <span className="text-teal-700 font-semibold">
-              {activities.length} bài vận động đã tập
+              {todayActivities.length} hoạt động đã ghi nhận hôm nay
             </span>
             <span className="text-slate-400 group-hover:text-teal-600 font-medium">Chi tiết &rarr;</span>
           </div>
@@ -774,28 +779,22 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               <div>
                 <div className="flex justify-between text-xs font-semibold mb-1">
                   <span className="text-slate-600">Lượng tinh bột (Carb):</span>
-                  <span className="font-mono font-bold text-slate-900">{totalCarbsToday}g / {recommendedCarbsMax}g</span>
+                  <span className="font-mono font-bold text-slate-900">{totalCarbsToday}g đã ghi nhận</span>
                 </div>
-                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div
-                    className="bg-orange-500 h-full rounded-full transition-all"
-                    style={{ width: `${Math.min(100, Math.round((totalCarbsToday / recommendedCarbsMax) * 100))}%` }}
-                  />
-                </div>
-                <span className="text-[11px] text-emerald-700 font-medium block mt-1">
-                  {meals.length > 0 ? `Đã ghi nhận ${meals.length} bữa ăn hôm nay.` : 'Chưa ghi nhận bữa ăn hôm nay.'}
+                <span className="text-[11px] text-slate-600 font-medium block mt-1">
+                  {todayMeals.length > 0 ? `Đã ghi nhận ${todayMeals.length} bữa ăn hôm nay.` : 'Chưa ghi nhận bữa ăn hôm nay.'}
                 </span>
               </div>
 
               <div className="pt-2 border-t border-slate-100">
                 <div className="flex justify-between text-xs font-semibold mb-1">
                   <span className="text-slate-600">Nước uống:</span>
-                  <span className="font-mono font-bold text-cyan-800">{(waterDrankMl / 1000).toFixed(1)}L / {(profile.dailyWaterGoalMl / 1000).toFixed(1)}L</span>
+                  <span className="font-mono font-bold text-cyan-800">{(waterDrankMl / 1000).toFixed(1)}L {hasWaterGoal ? `/ ${(profile.dailyWaterGoalMl / 1000).toFixed(1)}L` : '· Chưa đặt mục tiêu'}</span>
                 </div>
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                   <div
                     className="bg-cyan-500 h-full rounded-full transition-all"
-                    style={{ width: `${waterPercentage}%` }}
+                    style={{ width: `${waterPercentage ?? 0}%` }}
                   />
                 </div>
                 <div className="flex items-center justify-between mt-2">
