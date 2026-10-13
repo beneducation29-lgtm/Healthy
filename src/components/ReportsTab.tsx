@@ -278,7 +278,12 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
   // Nutrition Summary
   const totalMealsCount = currentMeals.length;
   const totalCarbsEstimated = currentMeals.reduce((acc, m) => acc + (m.carbsGrams || 0), 0);
-  const avgCarbsPerDay = uniqueLoggedDays > 0 ? Math.round(totalCarbsEstimated / uniqueLoggedDays) : 0;
+  const mealLoggedDays = useMemo(() => {
+    const dates = new Set<string>();
+    currentMeals.forEach((meal) => dates.add(meal.timestamp.split('T')[0]));
+    return dates.size;
+  }, [currentMeals]);
+  const avgCarbsPerDay = mealLoggedDays > 0 ? Math.round(totalCarbsEstimated / mealLoggedDays) : null;
 
   // Medication Adherence Summary
   const totalDosesScheduled = currentDoses.length;
@@ -585,7 +590,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
             <div>
               <span className="text-slate-500 font-semibold">Vận động & Carbs TB: </span>
               <strong className="text-slate-900 font-mono text-sm">
-                {totalActivityMinutes} phút · ~{avgCarbsPerDay}g Carbs/ngày
+                {totalActivityMinutes} phút · {avgCarbsPerDay !== null ? `~${avgCarbsPerDay}g Carbs/ngày` : 'Chưa có dữ liệu Carbs'}
               </strong>
               <div className="text-[10px] text-slate-400">({totalMealsCount} bữa ăn đã ghi)</div>
             </div>
@@ -1171,7 +1176,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
                   </div>
                   <div className="flex justify-between items-baseline">
                     <span className="text-slate-500">Carbs TB mỗi ngày có ghi:</span>
-                    <strong className="text-slate-900 font-mono text-base">~{avgCarbsPerDay} g / ngày</strong>
+                    <strong className="text-slate-900 font-mono text-base">{avgCarbsPerDay !== null ? `~${avgCarbsPerDay} g / ngày` : 'Chưa có dữ liệu'}</strong>
                   </div>
                   <div className="flex justify-between items-baseline">
                     <span className="text-slate-500">Phân bố bữa ăn:</span>
