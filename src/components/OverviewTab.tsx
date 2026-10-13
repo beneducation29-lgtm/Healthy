@@ -780,7 +780,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                   />
                 </div>
                 <span className="text-[11px] text-emerald-700 font-medium block mt-1">
-                  Đã ghi nhận {meals.length} bữa ăn (Cháo yến mạch, cơm gạo lứt).
+                  {meals.length > 0 ? `Đã ghi nhận ${meals.length} bữa ăn hôm nay.` : 'Chưa ghi nhận bữa ăn hôm nay.'}
                 </span>
               </div>
 
