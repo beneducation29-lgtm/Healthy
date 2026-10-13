@@ -1150,7 +1150,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
               </div>
 
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-[11px] text-slate-600">
-                Khuyến nghị WHO: 150 phút vận động vừa phải/tuần giúp tăng độ nhạy insulin.
+                Mục tiêu vận động phù hợp còn tùy tình trạng sức khỏe; hãy trao đổi với nhân viên y tế về mức vận động dành riêng cho bạn.
               </div>
             </div>
 
@@ -1224,7 +1224,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
               </div>
 
               <div className="p-3 bg-blue-50/70 rounded-2xl border border-blue-100 text-[11px] text-blue-900">
-                Tuân thủ thuốc trên 85% giữ phác đồ điều trị của bác sĩ phát huy hiệu quả cao nhất.
+                Hãy dùng thuốc theo đúng chỉ định của bác sĩ. Số liệu ở đây chỉ phản ánh các liều đã được ghi nhận trong nhật ký.
               </div>
             </div>
           </div>
