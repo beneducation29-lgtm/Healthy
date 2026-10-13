@@ -263,11 +263,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             </div>
             {outOfRangeRecord.valueMgDl < targetMin ? (
               <p className="text-amber-900">
-                Chỉ số này ở mức thấp (&lt; 70 mg/dL). Bác nên bổ sung ngay 15g đường hấp thu nhanh (1 ly nước đường hoặc 3 viên kẹo ngọt) và nghỉ ngơi 15 phút.
+                Chỉ số thấp hơn ngưỡng theo dõi đã cài đặt. Hãy làm theo kế hoạch xử trí hạ đường huyết đã được nhân viên y tế hướng dẫn. Nếu lú lẫn, co giật, bất tỉnh hoặc không thể nuốt an toàn, hãy gọi cấp cứu; không cho ăn uống qua đường miệng.
               </p>
             ) : (
               <p className="text-slate-700">
-                Chỉ số này vượt ngưỡng mục tiêu một chút. Bác hãy uống thêm 1 cốc nước lọc lớn, đi bộ nhẹ nhàng 10 - 15 phút và hạn chế dùng tinh bột/đồ ngọt ở bữa tiếp theo.
+                Chỉ số cao hơn ngưỡng theo dõi đã cài đặt. Hãy làm theo kế hoạch theo dõi cá nhân do nhân viên y tế hướng dẫn và liên hệ cơ sở y tế nếu chỉ số tiếp tục cao hoặc có triệu chứng bất thường. Không tự ý thay đổi thuốc hay tập luyện để xử lý chỉ số này.
               </p>
             )}
             <p className="text-[11px] text-slate-500 mt-2 italic">
