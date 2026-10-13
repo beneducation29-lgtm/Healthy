@@ -547,7 +547,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
               <div className="text-2xl font-black font-mono text-emerald-700 mt-0.5">
                 {estimatedA1c ? `~${estimatedA1c}%` : 'Chưa ước tính'}
               </div>
-              <span className="text-[10px] text-slate-500">Mục tiêu y tế: &lt; 7.0%</span>
+              <span className="text-[10px] text-slate-500">Trao đổi bác sĩ về mục tiêu cá nhân</span>
             </div>
 
             <div>
@@ -710,13 +710,13 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
                   <span className="text-3xl font-black font-mono text-emerald-700 tabular-nums">
                     {estimatedA1c ? `~${estimatedA1c}%` : '--'}
                   </span>
-                  <span className="text-xs text-emerald-600 font-semibold">Mục tiêu &lt; 7.0%</span>
+                  <span className="text-xs text-slate-500 font-semibold">Chỉ số tham khảo</span>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-slate-100 text-xs">
                 <p className="text-[11px] text-slate-500 leading-relaxed">
-                  Công thức eA1c từ đường huyết mao mạch. Cần đối chiếu với xét nghiệm máu tại bệnh viện.
+                  Ước tính từ trung bình các lần đo trong giai đoạn đang chọn; không thay thế xét nghiệm HbA1c tại cơ sở y tế.
                 </p>
               </div>
             </div>
