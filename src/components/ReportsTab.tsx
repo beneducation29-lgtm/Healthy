@@ -366,7 +366,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Bao_Cao_Suc_Khoe_${profile.fullName.replace(/\s+/g, '_')}_${currentStart.toISOString().split('T')[0]}_den_${currentEnd.toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `Bao_Cao_Suc_Khoe_${profile.fullName.replace(/\s+/g, '_')}_${toLocalDateInput(currentStart)}_den_${toLocalDateInput(currentEnd)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -498,7 +498,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
         )}
 
         <div className="text-xs font-bold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60 self-start lg:self-auto">
-          Giai đoạn: <strong>{formatDateVi(currentStart.toISOString())}</strong> đến <strong>{formatDateVi(currentEnd.toISOString())}</strong> ({periodDays} ngày)
+          Giai đoạn: <strong>{formatDateVi(`${toLocalDateInput(currentStart)}T12:00:00`)}</strong> đến <strong>{formatDateVi(`${toLocalDateInput(currentEnd)}T12:00:00`)}</strong> ({periodDays} ngày)
         </div>
       </div>
 
@@ -521,8 +521,8 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
             </div>
 
             <div className="text-right text-xs text-slate-500 font-mono">
-              <div>Kỳ báo cáo: {formatDateVi(currentStart.toISOString())} - {formatDateVi(currentEnd.toISOString())}</div>
-              <div>Ngày xuất phiếu: {formatDateVi(today.toISOString())}</div>
+              <div>Kỳ báo cáo: {formatDateVi(`${toLocalDateInput(currentStart)}T12:00:00`)} - {formatDateVi(`${toLocalDateInput(currentEnd)}T12:00:00`)}</div>
+              <div>Ngày xuất phiếu: {formatDateVi(`${toLocalDateInput(today)}T12:00:00`)}</div>
               <div className="text-emerald-700 font-bold mt-1">Độ hoàn thành nhật ký: {loggingCompletionRate}%</div>
             </div>
           </div>
@@ -924,7 +924,7 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
                         </span>
                       </div>
                       <span className="text-slate-500 font-medium">
-                        Cao nhất: <strong>{formatGlucose(maxGlucose, unit).value} {unit}</strong> · Thấp nhất: <strong>{formatGlucose(minGlucose, unit).value} {unit}</strong>
+                        {glucoseCount > 0 ? <>Cao nhất: <strong>{formatGlucose(maxGlucose, unit).value} {unit}</strong> · Thấp nhất: <strong>{formatGlucose(minGlucose, unit).value} {unit}</strong></> : 'Chưa có dữ liệu đường huyết trong giai đoạn này'}
                       </span>
                     </div>
                   </div>
