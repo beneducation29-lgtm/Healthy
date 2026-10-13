@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Pill, 
   CheckCircle2, 
@@ -127,15 +127,37 @@ export const MedicationTab: React.FC<MedicationTabProps> = ({
   const [medFormType, setMedFormType] = useState<NonNullable<Medication['formType']>>('tablet');
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Today Doses filtering
-  const todayStr = useMemo(() => {
+  // Keep the local calendar date current even if this tab stays open overnight.
+  const [todayStr, setTodayStr] = useState(() => {
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  });
+
+  useEffect(() => {
+    const refreshToday = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const nextDate = `${year}-${month}-${day}`;
+      setTodayStr((currentDate) => currentDate === nextDate ? currentDate : nextDate);
+    };
+
+    const intervalId = window.setInterval(refreshToday, 60_000);
+    window.addEventListener('focus', refreshToday);
+    document.addEventListener('visibilitychange', refreshToday);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', refreshToday);
+      document.removeEventListener('visibilitychange', refreshToday);
+    };
   }, []);
-  
+
+  // Today Doses filtering
   const currentDayDoses = useMemo(() => {
     return todayDoses.filter((d) => d.date === todayStr);
   }, [todayDoses, todayStr]);
