@@ -162,9 +162,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   // Recent 4 readings
   const recentReadings = glucoseRecords.slice(0, 4);
 
-  // BMI Calculation
-  const heightM = (profile.heightCm || 165) / 100;
-  const bmi = +((profile.weightKg || 65) / (heightM * heightM)).toFixed(1);
+  // Only calculate BMI from values the user has actually saved in their profile.
+  const hasValidHeight = Number.isFinite(profile.heightCm) && profile.heightCm > 0;
+  const hasValidWeight = Number.isFinite(profile.weightKg) && profile.weightKg > 0;
+  const bmi = hasValidHeight && hasValidWeight
+    ? +(profile.weightKg / Math.pow(profile.heightCm / 100, 2)).toFixed(1)
+    : null;
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
@@ -413,7 +416,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
           <div className="flex items-baseline gap-2">
             <span className="text-3xl sm:text-4xl font-extrabold font-mono text-slate-900 tabular-nums">
-              {(profile.weightKg || 65).toFixed(1)}
+              {hasValidWeight ? profile.weightKg.toFixed(1) : '—'}
             </span>
             <span className="text-xs text-slate-500 font-semibold font-mono">kg</span>
           </div>
@@ -421,17 +424,17 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <div className="text-xs text-slate-600 space-y-1 pt-1">
             <div className="flex items-center justify-between">
               <span>Chỉ số khối cơ thể (BMI):</span>
-              <span className="font-mono font-bold text-slate-900">{bmi} kg/m²</span>
+              <span className="font-mono font-bold text-slate-900">{bmi !== null ? `${bmi} kg/m²` : 'Chưa đủ dữ liệu'}</span>
             </div>
             <div className="flex items-center justify-between">
               <span>Chiều cao:</span>
-              <span className="font-semibold text-slate-800">{profile.heightCm} cm</span>
+              <span className="font-semibold text-slate-800">{hasValidHeight ? `${profile.heightCm} cm` : 'Chưa cập nhật'}</span>
             </div>
           </div>
 
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
             <span className="text-emerald-700 font-semibold flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Chuẩn thể trạng IDI & WPRO
+              <CheckCircle2 className="w-3.5 h-3.5" /> Theo dõi thể trạng
             </span>
             <span className="text-slate-400 group-hover:text-indigo-600 font-medium">Hồ sơ &rarr;</span>
           </div>
